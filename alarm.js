@@ -1,4 +1,4 @@
-ar Gpio = require('onoff').Gpio
+var Gpio = require('onoff').Gpio
 
 var doorPin = new Gpio(2, 'in', 'falling')
 var sirenPin = new Gpio(4, 'out')
