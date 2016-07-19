@@ -1,6 +1,6 @@
 ar Gpio = require('onoff').Gpio
 
-var doorPin = new Gpio(3, 'in', 'falling')
+var doorPin = new Gpio(2, 'in', 'falling')
 var sirenPin = new Gpio(4, 'out')
 var alarmSwitch = new Gpio(17, 'in', 'falling')
 
