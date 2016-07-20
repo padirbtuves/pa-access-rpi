@@ -1,26 +1,18 @@
-var request = require('request')
-var storage = require('node-persist')
 var Gpio = require('onoff').Gpio
 var cache = require('js-cache')
 var nfc = require('nfc').nfc
 var alarm = require('./alarm')
+var server = require('./server')
 
 var lockPin = new Gpio(5, 'out')
 var soundPin = new Gpio(6, 'out')
 
 var lockTimeoutId = null
 
-storage.init()
 alarm.init()
 
 function handleTag(tag) {
-    var tagInfo = storage.getItem(tag.id)
-
-    if (tagInfo != null) {
-        openDoor(tagInfo)
-    }
-
-    getTagInfo(tag.id, openDoor)
+    server.getTagInfo(tag.id, openDoor, openDoor)
 }
 
 function openDoor(tagInfo) {
@@ -38,23 +30,6 @@ function openDoor(tagInfo) {
             lockTimeoutId = null
         }, 5000)
     }
-}
-
-function getTagInfo(tagId, callback) {
-    var url = "http://mano.padirbtuves.lt/auth/nfc?id=" + tagId
-
-    request({
-        url: url,
-        json: true
-    }, function (error, response, tagInfo) {
-        console.log("Tag : " + tagInfo.id)
-        if (!error && response.statusCode === 200 && tagInfo.valid) {
-            storage.setItem(tagId, tagInfo)
-            callback(tagInfo)
-        } else {
-            storage.removeItem(tagId)
-        }
-    })
 }
 
 function convertTagId(tagId) {
@@ -75,6 +50,7 @@ new nfc.NFC().on('read', function (tag) {
 function exit() {
     lockPin.unexport()
     soundPin.unexport()
+    alarm.tearDown()
 }
 
 console.log("Started")
