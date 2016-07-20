@@ -1,4 +1,5 @@
 var Gpio = require('onoff').Gpio
+var server = require('./server')
 
 var doorPin = new Gpio(2, 'in', 'falling')
 var sirenPin = new Gpio(4, 'out')
@@ -11,7 +12,8 @@ module.exports = {
 
     init: function () {
         doorPin.watch(function (err, value) {
-            console.log("Door pin " + value)
+            server.sendEvent("door")
+            
                 // if alarm is activated and door get opened, trigger alarm
             if (alarmActivated) {
                 this.triggerAlarm()
@@ -23,34 +25,17 @@ module.exports = {
         })
     },
 
-    tearDown: function () {
-        doorPin.unexport()
-        sirenPin.unexport()
-        alarmSwitch.unexport()
-    },
-
     triggerAlarm: function () {
         if (!alarmTriggered) {
             alarmTriggered = true
             sirenPin.write(1)
-            this.notifyServer()
+            server.sendEvent("alarm")
 
             // Keep siren for 30 minutes or until disabled
             setTimeout(function () {
                 this.disableAlarm()
             }, 60000 * 30)
         }
-    },
-
-    notifyServer: function () {
-        var url = "http://mano.padirbtuves.lt/auth/alarm"
-
-        request({
-            url: url,
-            json: true
-        }, function (error, response, body) {
-            // What to do with response?
-        })
     },
 
     enableAlarm: function () {
@@ -64,5 +49,11 @@ module.exports = {
         alarmActivated = false
         alarmTriggered = false
         sirenPin.write(0)
+    },
+
+    tearDown: function () {
+        doorPin.unexport()
+        sirenPin.unexport()
+        alarmSwitch.unexport()
     },
 }
