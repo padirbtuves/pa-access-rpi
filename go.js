@@ -30,6 +30,10 @@ function openDoor(tagInfo) {
             lockTimeoutId = null
         }, 5000)
     }
+
+    if (!tagInfo.valid) {
+        
+    }
 }
 
 function convertTagId(tagId) {
@@ -38,6 +42,7 @@ function convertTagId(tagId) {
 
 new nfc.NFC().on('read', function (tag) {
     tag.id = convertTagId(tag.uid)
+    //console.log("Tag received: " + tag.id)
 
     var cachedTag = cache.get(tag.uid)
     if (cachedTag == null) {

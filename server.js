@@ -23,12 +23,15 @@ module.exports = {
             json: true
         }, function (error, response, tagInfo) {
             console.log("Tag : " + tagInfo.id)
+            console.log("Response : " + tagInfo.valid)
+
             if (!error && response.statusCode === 200 && tagInfo.valid) {
                 storage.setItem(tagId, tagInfo)
-                callback(tagInfo)
             } else {
                 storage.removeItem(tagId)
+                tagInfo.valid = false
             }
+            callback(tagInfo)
         })
     },
 
