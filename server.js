@@ -1,7 +1,9 @@
 var request = require('request')
 var storage = require('node-persist')
-var storage.init()
-var cientId = process.env.GO_CLIENT_ID
+
+storage.init()
+
+var clientId = process.env.GO_CLIENT_ID
 if (clientId == null) {
     console.log("Client id is not specified. Use GO_CLIENT_ID env variable.")
 }

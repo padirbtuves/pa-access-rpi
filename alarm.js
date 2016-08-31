@@ -12,7 +12,7 @@ module.exports = {
 
     init: function () {
         doorPin.watch(function (err, value) {
-            server.sendEvent("door")
+            server.sendEvent("door " + value)
             
                 // if alarm is activated and door get opened, trigger alarm
             if (alarmActivated) {
