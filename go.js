@@ -29,6 +29,7 @@ function openDoor(tagInfo) {
 
         lockPin.write(1)
         soundPin.write(1)
+        
         setTimeout(function () {
             soundPin.write(0)
         }, 10)
@@ -78,5 +79,3 @@ function exit() {
 }
 
 console.log("Started")
-
-//process.on('SIGINT', exit)
