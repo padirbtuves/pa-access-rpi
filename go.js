@@ -33,7 +33,16 @@ function openDoor(tagInfo) {
     }
 
     if (!tagInfo.valid) {
-        
+	var soundOn = 0
+        var intervalID = setInterval(function() {
+		soundPin.write(soundOn)
+		soundOn = soundOn == 0 ? 1 : 0
+	}, 10)
+
+	setTimeout(function() {
+		clearInterval(intervalID)
+		soundPin.write(0)
+	}, 500)
     }
 }
 

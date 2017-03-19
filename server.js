@@ -1,5 +1,4 @@
 var request = require('request')
-<<<<<<< HEAD
 
 module.exports = {
 
@@ -15,7 +14,7 @@ module.exports = {
         })
     }
 }
-=======
+
 var storage = require('node-persist')
 
 storage.init()
@@ -39,7 +38,8 @@ module.exports = {
             url: url,
             json: true
         }, function (error, response, tagInfo) {
-            console.log("Tag : " + tagInfo.id)
+            console.log(new Date())
+	    console.log("Tag : " + tagInfo.id)
             console.log("Response : " + tagInfo.valid)
 
             if (!error && response.statusCode === 200 && tagInfo.valid) {
@@ -65,4 +65,3 @@ module.exports = {
 
 
 }
->>>>>>> 045aa28de95fb5b06884d149c9952942af49904c
