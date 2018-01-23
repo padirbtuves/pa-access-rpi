@@ -1,8 +1,8 @@
-//var Gpio = require('onoff').Gpio
+var Gpio = require('onoff').Gpio
 var server = require('./server')
 
-//var lockPin = new Gpio(5, 'out')
-//var soundPin = new Gpio(6, 'out')
+var lockPin = new Gpio(5, 'out')
+var soundPin = new Gpio(6, 'out')
 
 var lockTimeoutId = null
 
