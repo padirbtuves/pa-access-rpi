@@ -1,19 +1,17 @@
 {
-  "name": "go",
-  "version": "1.0.0",
-  "description": "",
-  "main": "go.js",
-  "dependencies": {
-    "js-cache": "^1.0.2",
-    "nfc": "^0.3.3",
-    "node-persist": "^0.0.11",
-    "onoff": "^1.1.1",
-    "request": "^2.73.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+    "name": "go",
+    "version": "1.0.0",
+    "description": "",
+    "main": "go.js",
+    "dependencies": {
+        "js-cache": "^1.0.2",
+        "onoff": "^1.1.1",
+        "request": "^2.73.0"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC"
 }

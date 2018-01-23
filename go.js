@@ -1,72 +1,33 @@
-var Gpio = require('onoff').Gpio
-var cache = require('js-cache')
-var nfc = require('nfc').nfc
-var alarm = require('./alarm')
+//var Gpio = require('onoff').Gpio
 var server = require('./server')
 
-var lockPin = new Gpio(5, 'out')
-var soundPin = new Gpio(6, 'out')
+//var lockPin = new Gpio(5, 'out')
+//var soundPin = new Gpio(6, 'out')
 
 var lockTimeoutId = null
 
-alarm.init()
-
-function handleTag(tag) {
-    server.getTagInfo(tag.id, openDoor, openDoor)
-}
-
 function openDoor(tagInfo) {
-    if (tagInfo.valid && lockTimeoutId == null) {
-        alarm.disableAlarm()
-
+    if (lockTimeoutId == null) {
         lockPin.write(1)
         soundPin.write(1)
-        
-        setTimeout(function () {
+
+        setTimeout(function() {
             soundPin.write(0)
         }, 10)
 
-        lockTimeoutId = setTimeout(function () {
+        lockTimeoutId = setTimeout(function() {
             lockPin.write(0)
             lockTimeoutId = null
         }, 5000)
     }
-
-    if (!tagInfo.valid) {
-	var soundOn = 0
-        var intervalID = setInterval(function() {
-		soundPin.write(soundOn)
-		soundOn = soundOn == 0 ? 1 : 0
-	}, 10)
-
-	setTimeout(function() {
-		clearInterval(intervalID)
-		soundPin.write(0)
-	}, 500)
-    }
 }
 
-function convertTagId(tagId) {
-    return parseInt(tagId.split(":").reverse().join(''), 16).toString()
-}
-
-new nfc.NFC().on('read', function (tag) {
-    tag.id = convertTagId(tag.uid)
-    //console.log("Tag received: " + tag.id)
-
-    var cachedTag = cache.get(tag.uid)
-    if (cachedTag == null) {
-        handleTag(tag)
-    }
-
-    cache.set(tag.uid, tag, 1000)
-}).start()
-
-function exit() {
-    lockPin.unexport()
-    soundPin.unexport()
-    alarm.tearDown()
-}
+setInterval(function() {
+    server.getLock(function(locked) {
+        if (!locked) {
+            openDoor()
+        }
+    })
+}, 1000)
 
 console.log("Started")
-//process.on('SIGINT', exit)
